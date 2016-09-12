@@ -1,0 +1,26 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace CSharp.Apoio
+{
+    public class Formulario
+    {
+        public bool Validar(Form formulario, ErrorProvider provedorDeErro)
+        {
+        //Obs.: Prever que nos elementos do formulario a propriedade Tag seja igual a "*"
+        
+            foreach (Control controle in formulario.Controls)
+            {
+                if (controle.Tag != null && controle.Tag.ToString().Contains("*") && string.IsNullOrEmpty(controle.Text))
+                {
+                    provedorDeErro.SetError(controle, "Campo obrigatório.");
+                    controle.Focus();
+                }
+            }
+        }
+    }
+}
