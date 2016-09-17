@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -11,16 +12,44 @@ namespace CSharp.Apoio
     {
         public bool Validar(Form formulario, ErrorProvider provedorDeErro)
         {
-        //Obs.: Prever que nos elementos do formulario a propriedade Tag seja igual a "*"
-        
+            var resultadoValidacao = true;
+            provedorDeErro.Clear();
+
             foreach (Control controle in formulario.Controls)
             {
-                if (controle.Tag != null && controle.Tag.ToString().Contains("*") && string.IsNullOrEmpty(controle.Text))
+                if (controle.Tag == null)
                 {
+                    continue;
+                }
+                if (controle.Tag.ToString().Contains("*") && string.IsNullOrEmpty(controle.Text))
+                {
+                    resultadoValidacao = false;
                     provedorDeErro.SetError(controle, "Campo obrigatório.");
                     controle.Focus();
                 }
-            }
+                else
+                {
+                    if (controle.Tag.ToString().ToUpper().Contains("ANO"))
+                    {
+                        if (!Regex.IsMatch(controle.Text, @"^[0-9]{4}$")) //Regular Expressions, vem conteudo em: http://piazinho.com.br
+                        {
+                            resultadoValidacao = false;
+                            provedorDeErro.SetError(controle, "Digite o ano no formado 'YYYY'.");
+                            controle.Focus();
+                        }
+                    }
+                    else if (controle.Tag.ToString().ToUpper().Contains("PLACA"))
+                        {
+                            if (!Regex.IsMatch(controle.Text, @"^[A-Z]{3}[0-9]{4}$"))
+                            {
+                                resultadoValidacao = false;
+                                provedorDeErro.SetError(controle, "Digite a placa no formado 'AAA-0000'.");
+                                controle.Focus();
+                            }
+                        }
+                    }
+                }
+            return resultadoValidacao;
         }
     }
 }
