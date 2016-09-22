@@ -31,12 +31,5 @@ namespace CSharp.Apoio
                 }
             }
         }
-
-        private static bool DefinirErro(ErrorProvider provedorDeErro, Control controle, String mensagemErro)
-        {
-            provedorDeErro.SetError(controle, mensagemErro);
-            controle.Focus();
-            return false;
-        }
     }
 }
